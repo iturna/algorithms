@@ -1,0 +1,11 @@
+function allCombinations() {
+
+}
+
+
+//Dictionary { “flag”:4.5, “temp”:2 ,”foo”:9}
+//N : 11
+
+//Output:
+//“Flag”*2 + “temp”*1
+//“Foo”*1+”temp”*1
