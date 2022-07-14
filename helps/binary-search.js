@@ -1,3 +1,13 @@
+  const binary = function(arr, val, left, right) {
+    if(left>=right) return left;
+    let mid = left + Math.floor((right-left)/2);
+    if(arr[mid]===val) return mid;
+    else if(arr[mid]>val) return binary(arr, val, left, mid);
+    else if(arr[mid]<val) return binary(arr, val, mid+1, right);
+  }
+
+binary([1,2,4,5,6], 0, 0, 5)
+
 function search(arr, val) {
     let right = arr.length - 1;
     let left = 0;
