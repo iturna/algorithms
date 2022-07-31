@@ -23,3 +23,38 @@ function permutator(inputArr) {
 permutator([5, 3, 7, 1]);
 
 
+----------------------------------
+
+/**
+ * @param {string} s
+ * @return {string[][]}
+ 
+ abc
+ a,b,c
+ ab,c
+ a,bc
+ 
+ */
+    const ans = [];
+
+    
+    const permutation = function(curr, index) {
+      if(index===s.length) {
+        ans.push([...curr]);
+        return;
+      }
+      
+      for(let i=index; i<s.length; i++) {
+        if(isPalindrome(s.slice(index, i+1))) {
+          curr.push(s.slice(index, i+1));
+          permutation(curr, i+1);
+          curr.pop();
+        }
+      }
+    }
+    
+    permutation([], 0);
+    
+    return ans;
+
+
