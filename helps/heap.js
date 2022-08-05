@@ -117,3 +117,25 @@ Heap.minComparator = (a, b) => { return a - b; }
  *  Max Comparator
  */
 Heap.maxComparator = (a, b) => { return b - a; }
+
+
+//leetcode usage 
+  const map = s.split('').reduce(function(agg, val) {
+    if(agg.has(val)) agg.set(val, agg.get(val)+1);
+    else agg.set(val, 1);
+    return agg;
+  }, new Map());
+  
+  const heap = new MaxPriorityQueue();
+  for(let key of map.keys()) {
+    heap.enqueue(key, map.get(key));
+  }
+  
+  console.log(heap);
+  console.log(heap.front());
+  console.log(heap.back());
+  console.log(heap.dequeue())
+  console.log(heap.dequeue())
+  console.log(heap.dequeue())
+  
+  return '';
