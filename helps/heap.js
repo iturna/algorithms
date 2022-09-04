@@ -1,3 +1,73 @@
+class Heap {
+
+    /**
+     * Create a Heap
+     * @param {function} compareFunction - compares child and parent element
+     * to see if they should swap.  If return value is less than 0 it will
+     * swap to prioritize the child.
+     */
+    constructor(compareFunction) {
+        this.store = [];
+        this.compareFunction = compareFunction;
+    }
+    
+    peak() {
+        return this.store[0];
+    }
+    
+    size() {
+        return this.store.length;
+    }
+    
+    pop() {
+        if (this.size() < 2) {
+            return this.store.pop();
+        }
+        const result = this.store[0];
+        this.store[0] = this.store.pop();
+        this.heapifyDown(0);
+        return result;
+    }
+    
+    push(val) {
+        this.store.push(val);
+        this.heapifyUp(this.size() - 1);
+    }
+        
+    heapifyUp(child) {
+        while (child) {
+            const parent = Math.floor((child - 1) / 2);
+            
+            if (this.shouldSwap(child, parent)) {
+                [this.store[child], this.store[parent]] = [this.store[parent], this.store[child]]
+                child = parent;
+            } else {
+                return child;
+            }
+        }
+    }
+    
+    heapifyDown(parent) {
+        while (true) {
+            let [child, child2] = [1,2].map((x) => parent * 2 + x).filter((x) => x < this.size());
+            if (this.shouldSwap(child2, child)) {
+                child = child2;
+            }
+            
+            if (this.shouldSwap(child, parent)) {
+                [this.store[child], this.store[parent]] = [this.store[parent], this.store[child]]
+                parent = child;
+            } else {
+                return parent;
+            }
+        }
+    }
+    
+    shouldSwap(child, parent) {
+        return child && this.compareFunction(this.store[child], this.store[parent]) < 0;
+    }
+}
+
 /**
  * initialize your data structure here.
  */
@@ -37,76 +107,6 @@ MedianFinder.prototype.findMedian = function() {
     }
 };
 
-/** 
- *  custom Heap class
- */
-class Heap {
-	constructor(comparator) {
-		this.size = 0;
-		this.values = [];
-		this.comparator = comparator || Heap.minComparator;
-	}
-
-	add(val) {
-		this.values.push(val);
-		this.size ++;
-		this.bubbleUp();
-	}
-
-	peek() {
-		return this.values[0] || null;
-	}
-
-	poll() {
-		const max = this.values[0];
-		const end = this.values.pop();
-		this.size --;
-		if (this.values.length) {
-			this.values[0] = end;
-			this.bubbleDown();
-		}
-		return max;
-	}
-
-	bubbleUp() {
-		let index = this.values.length - 1;
-		let parent = Math.floor((index - 1) / 2);
-
-		while (this.comparator(this.values[index], this.values[parent]) < 0) {
-			[this.values[parent], this.values[index]] = [this.values[index], this.values[parent]];
-			index = parent;
-			parent = Math.floor((index - 1) / 2);
-		}
-	}
-
-	bubbleDown() {
-		let index = 0, length = this.values.length;
-
-		while (true) {
-			let left = null,
-				right = null,
-				swap = null,
-				leftIndex = index * 2 + 1,
-				rightIndex = index * 2 + 2;
-
-			if (leftIndex < length) {
-				left = this.values[leftIndex];
-				if (this.comparator(left, this.values[index]) < 0) swap = leftIndex;
-			}
-
-			if (rightIndex < length) {
-				right = this.values[rightIndex];
-				if ((swap !== null && this.comparator(right, left) < 0) || (swap === null && this.comparator(right, this.values[index]))) {
-					swap = rightIndex;
-				}
-			}
-			if (swap === null) break;
-
-			[this.values[index], this.values[swap]] = [this.values[swap], this.values[index]];
-			index = swap;
-		}
-	}
-}
 
 /** 
  *  Min Comparator
