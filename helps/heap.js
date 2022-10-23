@@ -1,4 +1,93 @@
 class Heap {
+  constructor(fn) {
+    this.store = [];
+    this.fn = fn;
+    this.idxs = {};
+  }
+
+  peak() {
+    return this.store[0] || 0;
+  }
+
+  size() {
+    return this.store.length;
+  }
+
+  isEmpty() {
+    return this.store.length === 0;
+  }
+
+  push(value) {
+    this.store.push(value);
+    const idx = this.store.length - 1;
+    if (!this.idxs[value]) this.idxs[value] = new Set([idx]);
+    else this.idxs[value].add(idx)
+    this.heapifyUp(idx);
+  }
+
+  remove(value) {
+    let idx;
+    for (let i of this.idxs[value]) {
+      idx = i;
+      break;
+    }
+    this.idxs[value].delete(idx);
+    if (idx === this.store.length - 1) return this.store.pop();
+    this.store[idx] = this.store.pop()
+    this.idxs[this.store[idx]].delete(this.store.length);
+    this.idxs[this.store[idx]].add(idx);
+    this.heapifyDown(this.heapifyUp(idx));
+  }
+
+  pop() {
+    const value = this.store[0];
+    this.idxs[value].delete(0);
+    if (this.store.length < 2) return this.store.pop();
+    this.store[0] = this.store.pop();
+    this.idxs[this.store[0]].delete(this.store.length);
+    this.idxs[this.store[0]].add(0);
+    this.heapifyDown(0);
+    return value;
+  }
+
+  heapifyDown(parent) {
+    const childs = [1,2].map((n) => parent * 2 + n).filter((n) => n < this.store.length);
+    let child = childs[0];
+    if (childs[1] && this.fn(this.store[childs[1]], this.store[child])) {
+      child = childs[1];
+    }
+    if (child && this.fn(this.store[child], this.store[parent])) {
+      const childVal = this.store[child];
+      const parentVal = this.store[parent];
+      this.store[child] = parentVal;
+      this.store[parent] = childVal;
+      this.idxs[childVal].delete(child);
+      this.idxs[childVal].add(parent);
+      this.idxs[parentVal].delete(parent);
+      this.idxs[parentVal].add(child);
+      return this.heapifyDown(child);
+    }
+    return parent;
+  }
+
+  heapifyUp(child) {
+    const parent = Math.floor((child - 1) / 2);
+    if (child && this.fn(this.store[child], this.store[parent])) {
+      const childVal = this.store[child];
+      const parentVal = this.store[parent];
+      this.store[child] = parentVal;
+      this.store[parent] = childVal;
+      this.idxs[childVal].delete(child);
+      this.idxs[childVal].add(parent);
+      this.idxs[parentVal].delete(parent);
+      this.idxs[parentVal].add(child);
+      return this.heapifyUp(parent);
+    }
+    return child;
+  }
+}
+
+class Heap {
 
     /**
      * Create a Heap
