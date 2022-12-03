@@ -1,0 +1,35 @@
+var findKthLargest = function(nums, k) {
+    
+    const quickSelect = function(arr, t, left, right) {
+      if(t<0 || t>=arr.length) return undefined;
+      
+      let i = left;
+      let j = left;
+      let p = right;
+      let rnd = left + Math.floor(Math.random()*(right-left));
+      [arr[rnd], arr[p]] = [arr[p], arr[rnd]];
+
+      //console.log(left, right, rnd)
+
+      const partition = function(i, j, p) {
+        if(j>=p) return p;
+        while(j<p) {
+          if(arr[j]>arr[p]) {
+            [arr[j], arr[i]] = [arr[i], arr[j]];
+            i++; 
+            j++;
+          } else j++;
+        }
+
+        [arr[i], arr[p]] = [arr[p], arr[i]];
+        return i;
+      }
+      
+      let newP = partition(i, j, p);
+      if(newP===t) return arr[newP];
+      else if(newP>t) return quickSelect(arr, t, left, newP-1);
+      else return quickSelect(arr, t, newP+1, right);
+    }
+
+    return quickSelect(nums, k-1, 0, nums.length-1);
+};
